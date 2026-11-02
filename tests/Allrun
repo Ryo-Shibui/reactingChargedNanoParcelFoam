@@ -1,0 +1,8 @@
+#!/bin/bash
+set -euo pipefail
+cd "$(dirname "$0")"
+test -n "${WM_PROJECT_DIR:-}" || { echo 'Source a supported OpenCFD OpenFOAM environment first.'; exit 1; }
+python3 run_suite.py --stage upgraded --solver reactingChargedNanoParcelFoam "$@"
+python3 turbulence_check.py reactingChargedNanoParcelFoam
+python3 force/run_force.py --solver reactingChargedNanoParcelFoam
+python3 force/pure_liquid.py run --solver reactingChargedNanoParcelFoam
